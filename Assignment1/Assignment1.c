@@ -46,8 +46,49 @@ FlightNode* createFlightNode(char* destination, char* date, float fare)
 	return newNode;
 }
 
+void insertSortedByFare(FlightNode** head, FlightNode** tail, FlightNode* newNode)
+{
+	FlightNode* current = *head;
+
+	if (*head == NULL)
+	{
+		*head = newNode;
+		*tail = newNode;
+		return;
+	}
+
+	while (current != NULL && current->flight.fare <= newNode->flight.fare)
+	{
+		current = current->next;
+	}
+
+	if (current == *head)
+	{
+		newNode->next = *head;
+		(*head)->prev = newNode;
+		*head = newNode;
+
+	}
+	else if (current == NULL)
+	{
+		newNode->prev = *tail;
+		(*tail)->next = newNode;
+		*tail = newNode;
+	}
+	else
+	{
+		newNode->next = current;
+		newNode->prev = current->prev;
+		current->prev->next = newNode;
+		current->prev = newNode;
+	}
+}
+
 int main(void)
 {
+
+	
+
 
 	return 0;
 }
