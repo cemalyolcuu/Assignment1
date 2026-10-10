@@ -130,8 +130,108 @@ void insertSortedByDestination(FlightNode** head, FlightNode** tail, FlightNode*
 
 int main(void)
 {
+	FlightNode* fareHead = NULL;
+	FlightNode* fareTail = NULL;
+	FlightNode* destinationHead = NULL;
+	FlightNode* destinationTail = NULL;
+
+	FlightNode* fareNode;
+	FlightNode* destinationNode;
+	FlightNode* current;
+	FlightNode* next;
+
+	char destination[15];
+	char date[9];
+	float fare;
+
+	while (1)
+	{
+		if (fgets(destination, sizeof(destination), stdin) == NULL)
+		{
+			break;
+		}
+
+		destination[strcspn(destination, "\n")] = '\0';
+
+		if (strcmp(destination, ".") == 0)
+		{
+			break;
+		}
+
+		if (fgets(date, sizeof(date), stdin) == NULL)
+		{
+			break;
+		}
+
+		date[strcspn(date, "\n")] = '\0';
+
+		if (strcmp(date, ".") == 0)
+		{
+			break;
+		}
+
+		if (scanf_s("%f", &fare) != 1)
+		{
+			break;
+		}
+
+		int ch;
+		while ((ch = getchar()) != '\n' && ch != EOF);
+		{
+		}
+
+		fareNode = createFlightNode(destination, date, fare);
+		destinationNode = createFlightNode(destination, date, fare);
+
+		if (fareNode == NULL || destinationNode == NULL)
+		{
+			if (fareNode != NULL)
+			{
+				free(fareNode->flight.destination);
+				free(fareNode->flight.date);
+				free(fareNode);
+			}
+
+			if (destinationNode != NULL)
+			{
+				free(destinationNode->flight.destination);
+				free(destinationNode->flight.date);
+				free(destinationNode);
+			}
+
+			break;
+
+		}
+
+		insertSortedByFare(&fareHead, &fareTail, fareNode);
+		insertSortedByDestination(&destinationHead, &destinationTail, destinationNode);
+
+	}
+
 	
-	
+
+	current = fareHead; /* free fare sorted list */
+
+	while (current != NULL)
+	{
+		next = current->next;
+		free(current->flight.destination);
+		free(current->flight.date);
+		free(current);
+		current = next;
+	}
+
+	current = destinationHead; /* free destination sorted list */
+
+	while (current != NULL)
+	{
+		next = current->next;
+		free(current->flight.destination);
+		free(current->flight.date);
+		free(current);
+		current = next;
+	}
+
 
 
 	return 0;
