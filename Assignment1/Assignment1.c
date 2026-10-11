@@ -48,7 +48,14 @@ FlightNode* createFlightNode(char* destination, char* date, float fare)
 
 void insertSortedByFare(FlightNode** head, FlightNode** tail, FlightNode* newNode)
 {
-	FlightNode* current = *head;
+	FlightNode* current;
+
+	if (newNode == NULL)
+	{
+		return;
+	}
+
+	current = *head;
 
 	if (*head == NULL)
 	{
@@ -128,6 +135,27 @@ void insertSortedByDestination(FlightNode** head, FlightNode** tail, FlightNode*
 	}
 }
 
+
+
+void displayList(FlightNode* head)
+{
+	FlightNode* current = head;
+
+	while (current != NULL)
+	{
+		printf("%-15s%-10s%-10.2f\n", 
+			current->flight.destination, 
+			current->flight.date, 
+			current->flight.fare);
+
+		current = current->next;
+	}
+}
+
+
+
+
+
 int main(void)
 {
 	FlightNode* fareHead = NULL;
@@ -140,8 +168,8 @@ int main(void)
 	FlightNode* current;
 	FlightNode* next;
 
-	char destination[15];
-	char date[9];
+	char destination[16];
+	char date[10];
 	float fare;
 
 	while (1)
@@ -176,7 +204,7 @@ int main(void)
 		}
 
 		int ch;
-		while ((ch = getchar()) != '\n' && ch != EOF);
+		while ((ch = getchar()) != '\n' && ch != EOF)
 		{
 		}
 
@@ -208,7 +236,9 @@ int main(void)
 
 	}
 
-	
+	displayList(fareHead);
+	displayList(destinationHead);
+
 
 	current = fareHead; /* free fare sorted list */
 
