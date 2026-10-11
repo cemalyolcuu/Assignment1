@@ -153,7 +153,21 @@ void displayList(FlightNode* head)
 }
 
 
+FlightNode* findFlight(FlightNode* head, char* destination, char* date)
+{
+	FlightNode* current = head;
 
+	while (current != NULL)
+	{
+		if (strcmp(current->flight.destination, destination) == 0 &&
+			strcmp(current->flight.date, date) == 0)
+		{
+			return current;
+		}
+		current = current->next;
+	}
+	return NULL;
+}
 
 
 int main(void)
@@ -238,6 +252,8 @@ int main(void)
 
 	displayList(fareHead);
 	displayList(destinationHead);
+
+
 
 
 	current = fareHead; /* free fare sorted list */
