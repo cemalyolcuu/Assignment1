@@ -1,3 +1,17 @@
+/*
+* FILE			: Assignment1.c
+* PROJECT		: DATA STRUCTURE, Assignment 1
+* PROGRAMMER	: Cemal Yolcu
+* FIRST VERSION	: 2026-10-09
+* DESCRIPTION	:
+*	This program stores flight information using two
+*	sorted doubly linked lists. One list is sorted by
+*	fare and the other is sorted by destination.
+*	The program supports flight searching, fare updates,
+*	and dynamic memory cleanup.
+*/
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -15,6 +29,22 @@ typedef struct FlightNode
 	struct FlightNode* prev;
 	struct FlightNode* next;
 } FlightNode;
+
+
+
+/*
+ * FUNCTION    : createFlightNode
+ * DESCRIPTION :
+ *     Allocates memory for a new flight node and its
+ *     destination and date strings.
+ * PARAMETERS  :
+ *     char* destination : Flight destination
+ *     char* date        : Flight date
+ *     float fare        : Flight fare
+ * RETURNS     :
+ *     FlightNode* : Pointer to the new node, or NULL
+ *                   if memory allocation fails.
+ */
 
 FlightNode* createFlightNode(char* destination, char* date, float fare)
 {
@@ -46,16 +76,28 @@ FlightNode* createFlightNode(char* destination, char* date, float fare)
 	return newNode;
 }
 
+
+/*
+ * FUNCTION    : insertSortedByFare
+ * DESCRIPTION :
+ *     Inserts a flight node into the doubly linked list
+ *     in ascending order by fare.
+ * PARAMETERS  :
+ *     FlightNode** head : Pointer to the list head
+ *     FlightNode** tail : Pointer to the list tail
+ *     FlightNode* newNode : Node to insert
+ * RETURNS     :
+ *     void : No return value
+ */
+
 void insertSortedByFare(FlightNode** head, FlightNode** tail, FlightNode* newNode)
 {
-	FlightNode* current;
+	FlightNode* current = *head;
 
 	if (newNode == NULL)
 	{
 		return;
 	}
-
-	current = *head;
 
 	if (*head == NULL)
 	{
@@ -91,16 +133,28 @@ void insertSortedByFare(FlightNode** head, FlightNode** tail, FlightNode* newNod
 	}
 }
 
+
+/*
+ * FUNCTION    : insertSortedByDestination
+ * DESCRIPTION :
+ *     Inserts a flight node into the doubly linked list
+ *     in ascending alphabetical order by destination.
+ * PARAMETERS  :
+ *     FlightNode** head : Pointer to the list head
+ *     FlightNode** tail : Pointer to the list tail
+ *     FlightNode* newNode : Node to insert
+ * RETURNS     :
+ *     void : No return value
+ */
+
 void insertSortedByDestination(FlightNode** head, FlightNode** tail, FlightNode* newNode)
 {
-	FlightNode* current;
+	FlightNode* current = *head;
 
 	if (newNode == NULL)
 	{
 		return;
 	}
-
-	current = *head;
 
 	if (*head == NULL)
 	{
@@ -136,6 +190,16 @@ void insertSortedByDestination(FlightNode** head, FlightNode** tail, FlightNode*
 }
 
 
+/*
+ * FUNCTION    : displayList
+ * DESCRIPTION :
+ *     Displays all flights in the linked list, including
+ *     destination, date, and fare.
+ * PARAMETERS  :
+ *     FlightNode* head : Head of the list to display
+ * RETURNS     :
+ *     void : No return value
+ */
 
 void displayList(FlightNode* head)
 {
@@ -153,6 +217,20 @@ void displayList(FlightNode* head)
 }
 
 
+/*
+ * FUNCTION    : findFlight
+ * DESCRIPTION :
+ *     Searches the linked list for a flight matching
+ *     both the destination and date.
+ * PARAMETERS  :
+ *     FlightNode* head : Head of the list to search
+ *     char* destination : Destination to find
+ *     char* date        : Date to find
+ * RETURNS     :
+ *     FlightNode* : Pointer to the matching node,
+ *                   or NULL if no match is found.
+ */
+
 FlightNode* findFlight(FlightNode* head, char* destination, char* date)
 {
 	FlightNode* current = head;
@@ -169,6 +247,20 @@ FlightNode* findFlight(FlightNode* head, char* destination, char* date)
 	return NULL;
 }
 
+
+/*
+ * FUNCTION    : deleteNode
+ * DESCRIPTION :
+ *     Removes a node from the doubly linked list,
+ *     updates the surrounding links and list pointers,
+ *     and frees the allocated memory.
+ * PARAMETERS  :
+ *     FlightNode* node  : Node to delete
+ *     FlightNode** head : Pointer to the list head
+ *     FlightNode** tail : Pointer to the list tail
+ * RETURNS     :
+ *     void : No return value
+ */
 
 void deleteNode(FlightNode* node, FlightNode** head, FlightNode** tail) 
 {
@@ -210,18 +302,18 @@ int main(void)
 	FlightNode* destinationHead = NULL;
 	FlightNode* destinationTail = NULL;
 
-	FlightNode* fareNode;
-	FlightNode* destinationNode;
-	FlightNode* current;
-	FlightNode* next;
-	FlightNode* foundFlight;
-	FlightNode* fareMatch;
-	FlightNode* updatedNode;
-	float newFare;
+	FlightNode* fareNode = NULL;
+	FlightNode* destinationNode = NULL;
+	FlightNode* foundFlight = NULL;
+	FlightNode* fareMatch = NULL;
+	FlightNode* updatedNode = NULL;
 
-	char destination[16];
-	char date[10];
-	float fare;
+	float newFare = 0.0f;
+
+	char destination[16] = { 0 };
+	char date[10] = { 0 };
+	float fare = 0.0f;
+
 
 	while (1)
 	{
@@ -254,7 +346,7 @@ int main(void)
 			break;
 		}
 
-		int ch;
+		int ch = 0;
 		while ((ch = getchar()) != '\n' && ch != EOF)
 		{
 		}
@@ -350,28 +442,18 @@ int main(void)
 
 
 
-
-	current = fareHead; /* free fare sorted list */
-
-	while (current != NULL)
+	/* Free fare sorted list */
+	while (fareHead != NULL)
 	{
-		next = current->next;
-		free(current->flight.destination);
-		free(current->flight.date);
-		free(current);
-		current = next;
+		deleteNode(fareHead, &fareHead, &fareTail);
 	}
 
-	current = destinationHead; /* free destination sorted list */
-
-	while (current != NULL)
+	/* Free destination sorted list */
+	while (destinationHead != NULL)
 	{
-		next = current->next;
-		free(current->flight.destination);
-		free(current->flight.date);
-		free(current);
-		current = next;
+		deleteNode(destinationHead, &destinationHead, &destinationTail);
 	}
+
 
 
 
