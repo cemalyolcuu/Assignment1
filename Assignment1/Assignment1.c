@@ -170,6 +170,39 @@ FlightNode* findFlight(FlightNode* head, char* destination, char* date)
 }
 
 
+void deleteNode(FlightNode* node, FlightNode** head, FlightNode** tail) 
+{
+	if (node == NULL)
+	{
+		return;
+	}
+
+	if (node->prev != NULL)
+	{
+		node->prev->next = node->next;
+	}
+	else
+	{
+		*head = node->next;
+	}
+
+	if (node->next != NULL)
+	{
+		node->next->prev = node->prev;
+	}
+	else
+	{
+		*tail = node->prev;
+	}
+
+	free(node->flight.destination);
+	free(node->flight.date);
+	free(node);
+
+}
+
+
+
 int main(void)
 {
 	FlightNode* fareHead = NULL;
