@@ -214,6 +214,10 @@ int main(void)
 	FlightNode* destinationNode;
 	FlightNode* current;
 	FlightNode* next;
+	FlightNode* foundFlight;
+	FlightNode* fareMatch;
+	FlightNode* updatedNode;
+	float newFare;
 
 	char destination[16];
 	char date[10];
@@ -282,6 +286,64 @@ int main(void)
 		insertSortedByDestination(&destinationHead, &destinationTail, destinationNode);
 
 	}
+
+	displayList(fareHead);
+	displayList(destinationHead);
+
+
+
+
+	/* Search for a flight to update its fare */
+
+	if (fgets(destination, sizeof(destination), stdin) != NULL)
+	{
+		destination[strcspn(destination, "\n")] = '\0';
+
+		if (fgets(date, sizeof(date), stdin) != NULL)
+		{
+			date[strcspn(date, "\n")] = '\0';
+
+			foundFlight = findFlight(destinationHead, destination, date);
+
+			if (foundFlight == NULL)
+			{
+				printf("Flight not found.\n");
+			}
+			else
+			{
+				printf("Current fare: %.2f\n", foundFlight->flight.fare);
+				printf("Enter new fare:\n");
+
+				if (scanf_s("%f", &newFare) == 1)
+				{
+					if (newFare == foundFlight->flight.fare)
+					{
+						printf("Fare unchanged.\n");
+					}
+					else
+					{
+						fareMatch = findFlight(fareHead, destination, date);
+
+						if (fareMatch != NULL)
+						{
+							updatedNode = createFlightNode(destination, date, newFare);
+
+							if (updatedNode != NULL)
+							{
+								foundFlight->flight.fare = newFare;
+
+								deleteNode(fareMatch, &fareHead, &fareTail);
+
+								insertSortedByFare(&fareHead, &fareTail, updatedNode);
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	/* Display both lists after the update */
 
 	displayList(fareHead);
 	displayList(destinationHead);
