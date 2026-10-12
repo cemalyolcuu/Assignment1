@@ -48,15 +48,15 @@ typedef struct FlightNode
 
 FlightNode* createFlightNode(char* destination, char* date, float fare)
 {
-	FlightNode* newNode = (FlightNode*)malloc(sizeof(FlightNode));
+	FlightNode* newNode = (FlightNode*)malloc(sizeof(FlightNode)); // Allocate memory for one flight node
 
 	if (newNode == NULL)
 	{
 		return NULL;
 	}
 
-	newNode->flight.destination = (char*)malloc(strlen(destination) + 1);
-	newNode->flight.date = (char*)malloc(strlen(date) + 1);
+	newNode->flight.destination = (char*)malloc(strlen(destination) + 1); // +1 for null terminator
+	newNode->flight.date = (char*)malloc(strlen(date) + 1); // Allocate memory for the date string
 
 	if (newNode->flight.destination == NULL || newNode->flight.date == NULL)
 	{
@@ -66,7 +66,7 @@ FlightNode* createFlightNode(char* destination, char* date, float fare)
 		return NULL;
 	}
 
-	strcpy_s(newNode->flight.destination, strlen(destination) + 1, destination);
+	strcpy_s(newNode->flight.destination, strlen(destination) + 1, destination); // Copy destination into allocated memory
 	strcpy_s(newNode->flight.date, strlen(date) + 1, date);
 
 	newNode->flight.fare = fare;
@@ -92,7 +92,7 @@ FlightNode* createFlightNode(char* destination, char* date, float fare)
 
 void insertSortedByFare(FlightNode** head, FlightNode** tail, FlightNode* newNode)
 {
-	FlightNode* current = *head;
+	FlightNode* current = *head; // Start traversing from the head
 
 	if (newNode == NULL)
 	{
@@ -106,7 +106,7 @@ void insertSortedByFare(FlightNode** head, FlightNode** tail, FlightNode* newNod
 		return;
 	}
 
-	while (current != NULL && current->flight.fare <= newNode->flight.fare)
+	while (current != NULL && current->flight.fare <= newNode->flight.fare) // Find the correct position by fare
 	{
 		current = current->next;
 	}
@@ -120,9 +120,9 @@ void insertSortedByFare(FlightNode** head, FlightNode** tail, FlightNode* newNod
 	}
 	else if (current == NULL)
 	{
-		newNode->prev = *tail;
-		(*tail)->next = newNode;
-		*tail = newNode;
+		newNode->prev = *tail; // Link the new node to the current tail
+		(*tail)->next = newNode; // Connect the current tail to the new node
+		*tail = newNode; // Update the tail pointer
 	}
 	else
 	{
@@ -163,7 +163,7 @@ void insertSortedByDestination(FlightNode** head, FlightNode** tail, FlightNode*
 		return;
 	}
 
-	while (current != NULL && strcmp(current->flight.destination, newNode->flight.destination) <= 0)
+	while (current != NULL && strcmp(current->flight.destination, newNode->flight.destination) <= 0) // Find alphabetical position
 	{
 		current = current->next;
 	}
@@ -238,7 +238,7 @@ FlightNode* findFlight(FlightNode* head, char* destination, char* date)
 	while (current != NULL)
 	{
 		if (strcmp(current->flight.destination, destination) == 0 &&
-			strcmp(current->flight.date, date) == 0)
+			strcmp(current->flight.date, date) == 0) // Both destination and date must match
 		{
 			return current;
 		}
@@ -271,20 +271,20 @@ void deleteNode(FlightNode* node, FlightNode** head, FlightNode** tail)
 
 	if (node->prev != NULL)
 	{
-		node->prev->next = node->next;
+		node->prev->next = node->next; // Connect previous node to the next node
 	}
 	else
 	{
-		*head = node->next;
+		*head = node->next; // Update head when deleting the first node
 	}
 
 	if (node->next != NULL)
 	{
-		node->next->prev = node->prev;
+		node->next->prev = node->prev; // Connect next node to the previous node
 	}
 	else
 	{
-		*tail = node->prev;
+		*tail = node->prev; // Update tail when deleting the last node
 	}
 
 	free(node->flight.destination);
@@ -322,7 +322,7 @@ int main(void)
 			break;
 		}
 
-		destination[strcspn(destination, "\n")] = '\0';
+		destination[strcspn(destination, "\n")] = '\0'; // Remove newline from fgets input
 
 		if (strcmp(destination, ".") == 0)
 		{
@@ -347,7 +347,7 @@ int main(void)
 		}
 
 		int ch = 0;
-		while ((ch = getchar()) != '\n' && ch != EOF)
+		while ((ch = getchar()) != '\n' && ch != EOF)  // Clear remaining characters after fare input
 		{
 		}
 
@@ -422,11 +422,11 @@ int main(void)
 
 							if (updatedNode != NULL)
 							{
-								foundFlight->flight.fare = newFare;
+								foundFlight->flight.fare = newFare; // Update fare in destination-sorted list
 
-								deleteNode(fareMatch, &fareHead, &fareTail);
+								deleteNode(fareMatch, &fareHead, &fareTail); // Remove old fare node
 
-								insertSortedByFare(&fareHead, &fareTail, updatedNode);
+								insertSortedByFare(&fareHead, &fareTail, updatedNode); // Reinsert node in sorted order
 							}
 						}
 					}
